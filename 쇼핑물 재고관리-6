@@ -2,181 +2,215 @@
 
 #define num 5 //상품의 최대 개수
 
-typedef struct stuffInfo{
-    int stuffSerialNum;   //시리얼번호
-    char stuffName[101];    //상품명
-    int stuffStoreNum;      //입고수량
-    int stuffSellPrice;     //판매가격
-    int stuffSoldNum;       //판매량
-} STUFFINFO;
+// 상품 정보 구조체 선언 (여러 변수를 하나로 묶음)
+typedef struct stuffInfo {
+    int stuffSerialNum;   // 시리얼번호
+    char stuffName[101];  // 상품명
+    int stuffStoreNum;    // 입고수량
+    int stuffSellPrice;   // 판매가격
+    int stuffSoldNum;     // 판매량
+} STUFFINFO;              //구조체 타입을 참조하는데 사용 되는 별칭 
 
-int stuffNumbers = 0;
+int stuffNumbers = 0; // 현재까지 등록된 상품 개수
 
-void ipgo(struct stuffInfo *stuff);
-void panmae(struct stuffInfo *stuff);
-void eachInfo(struct stuffInfo *stuff);
-void allInfo(struct stuffInfo* stuff);
+// 함수 프로토타입 선언
+void ipgo(struct stuffInfo *stuff);    // 입고 관련 함수
+void panmae(struct stuffInfo *stuff);  // 판매 관련 함수
+void eachInfo(struct stuffInfo *stuff); // 개별 상품 정보 출력 함수
+void allInfo(struct stuffInfo* stuff);  // 전체 상품 정보 출력 함수
 
-int main(){
-    int stuffSerialId[num]={};
-    int getNumber;
-    int check=0;
-    int select = 6, i=0;
-    struct stuffInfo stuff[num];
+int main() {
+    int stuffSerialId[num] = {}; // 상품 시리얼 번호 배열 초기화, 여러 시리얼 번호 관리 용도로 사용
+    int getNumber;               // 상품 ID 입력 변수
+    int check = 0;               // 상품 ID가 있는지 확인하는 변수
+    int select = 6, i = 0;       // 메뉴 선택 및 반복문에서 사용할 변수
+    struct stuffInfo stuff[num]; // 상품 정보 배열 선언 (최대 5개)
+    
+    // 프로그램 초기 메시지 출력
     printf("[쇼핑몰 관리 프로그램]\n");
-    printf("> 원하는메뉴를선택하세요.((1. 입고, 2. 판매, 3. 개별현황. 4. 전체현황, 5. 종료)\n");
+    printf("> 원하는 메뉴를 선택하세요.((1. 입고, 2. 판매, 3. 개별현황. 4. 전체현황, 5. 종료)\n");
     printf(">");
-    while(select<0||select>5){
+
+    // 메뉴 번호가 1~5가 아닌 경우 다시 입력 받음
+    while (select < 0 || select > 5) {
         scanf("%d", &select);
-        if(select<0||select>5){
+        if (select < 0 || select > 5) {
             printf("\n잘못된 값입니다.\n");
         }
     }
-    
-    
-    while(select != 5){
-    
-        if(select == 1){      //입고
-            if(stuffNumbers >= 5){
+
+    // 메뉴 선택에 따라 프로그램 진행
+    while (select != 5) {
+        if (select == 1) { //입고 선택
+            if (stuffNumbers >= 5) {  // 상품이 이미 5개 등록된 경우 처리
                 printf("\n상품 갯수가 이미 5개 입니다.\n");
             }
+            
             printf("\n상품 ID : ");
             scanf("%d", &getNumber);
-            if(stuffNumbers >= 5){ //만약 상품이 5개 일경우
-                for(int i=0; i<num; i++){
-                	if (getNumber == stuff[i].stuffSerialNum){
-                		ipgo(&stuff[i]);
-                		    break;
-					}
-				}
-				
-            }
-            else if(stuffNumbers <5){
-                for(int i=0; i<num; i++){
-                	if (getNumber == stuff[i].stuffSerialNum){
-                		check = 1;
-                		ipgo(&stuff[i]);
-                		    break;
-					}
-				}
-				if(check == 0){
-				    stuffSerialId[stuffNumbers] = getNumber;
-				    stuff[stuffNumbers].stuffSerialNum = getNumber;
-                	ipgo(&stuff[stuffNumbers]);
-                	stuffNumbers+=1;
-				}
-			}
-			check = 0;
-        }//입고
-        else if(select == 2){ //판매
-            printf("\n상품 ID : ");
-            scanf("%d", &getNumber);
-            for(int i = 0; i < num; i++){  //있는 ID 인지 판별
-                if(getNumber == stuff[i].stuffSerialNum){
-                    check = 1;
+
+            // 상품이 5개일 경우, 해당 상품의 ID를 찾아 입고 처리
+            if (stuffNumbers >= 5) {
+                for (int i = 0; i < num; i++) {
+                    if (getNumber == stuff[i].stuffSerialNum) {
+                        ipgo(&stuff[i]); // 해당 상품의 입고 처리
                         break;
+                    }
                 }
             }
-            if(check == 0){
+            // 상품이 5개 미만일 경우
+            else if (stuffNumbers < 5) {
+                for (int i = 0; i < num; i++) {
+                    if (getNumber == stuff[i].stuffSerialNum) {
+                        check = 1;
+                        ipgo(&stuff[i]); // 해당 상품의 입고 처리
+                        break;
+                    }
+                }
+                // 새로운 상품 등록
+                if (check == 0) {
+                    stuffSerialId[stuffNumbers] = getNumber;          // 시리얼 번호 저장
+                    stuff[stuffNumbers].stuffSerialNum = getNumber;   // 시리얼 번호 구조체에 저장
+                    ipgo(&stuff[stuffNumbers]);                       // 새 상품의 입고 처리
+                    stuffNumbers += 1;                                // 상품 개수 증가
+                }
+            }
+            check = 0;
+        }
+        // 판매 선택
+        else if (select == 2) {
+            printf("\n상품 ID : ");
+            scanf("%d", &getNumber);
+            
+            // 해당 상품 ID가 있는지 확인
+            for (int i = 0; i < num; i++) {
+                if (getNumber == stuff[i].stuffSerialNum) {
+                    check = 1;
+                    break;
+                }
+            }
+            // 상품 ID가 없는 경우
+            if (check == 0) {
                 printf("\n없는 상품 ID 입니다");
             }
-            else if (check == 1){
+            // 상품 ID가 있는 경우 판매 처리
+            else if (check == 1) {
                 panmae(&stuff[i]);
             }
             check = 0;
-        }//판매
-        else if(select == 3){ //개별현황
+        }
+        // 개별 상품 현황 확인
+        else if (select == 3) {
             printf("\n상품 ID : ");
             scanf("%d", &getNumber);
-            for(int i = 0; i < num; i++){  //있는 ID 인지 판별
-                if(getNumber == stuff[i].stuffSerialNum){
+
+            // 해당 상품 ID가 있는지 확인
+            for (int i = 0; i < num; i++) {
+                if (getNumber == stuff[i].stuffSerialNum) {
                     check = 1;
-                        break;
+                    break;
                 }
             }
-            if(check == 0){
+            // 상품 ID가 없는 경우
+            if (check == 0) {
                 printf("\n없는 상품 ID 입니다");
             }
-            else if (check == 1){
+            // 상품 ID가 있는 경우 개별 정보 출력
+            else if (check == 1) {
                 eachInfo(&stuff[i]);
             }
             check = 0;
         }
-        else if(select == 4){ //전체현황
-            allInfo(stuff);
+        // 전체 상품 현황 확인
+        else if (select == 4) {
+            allInfo(stuff); // 전체 상품 정보 출력
         }
-        
-        //printf("\n[쇼핑몰 관리 프로그램]\n");
+
+        // 다음 메뉴 선택
         printf("> 원하는메뉴를선택하세요.((1. 입고, 2. 판매, 3. 개별현황. 4. 전체현황, 5. 종료)\n");
         printf("> ");
         scanf("%d", &select);
-        
-        if(select<0||select>5){
+
+        // 메뉴 번호가 유효하지 않으면 오류 메시지 출력
+        if (select < 0 || select > 5) {
             printf("\n잘못된 값입니다.\n");
         }
     }
     return 0;
 }
 
-void ipgo(struct stuffInfo *stuff){ //입고
+// 입고 처리 함수
+void ipgo(struct stuffInfo *stuff) {
     printf("\n상품명 : ");
-    scanf("%s",&stuff->stuffName);
+    scanf("%s", &stuff->stuffName); // 상품명 입력
     printf("\n입고량 : ");
-    scanf("%d",&stuff->stuffStoreNum);
+    scanf("%d", &stuff->stuffStoreNum); // 입고량 입력
     printf("\n판매가격 : ");
-    scanf("%d",&stuff->stuffSellPrice);
+    scanf("%d", &stuff->stuffSellPrice); // 판매가격 입력
 }
 
-void panmae(struct stuffInfo *stuff){ //판매
+// 판매 처리 함수
+void panmae(struct stuffInfo *stuff) {
     printf("\n판매량 : ");
-    scanf("%d", &stuff->stuffSoldNum);
+    scanf("%d", &stuff->stuffSoldNum); // 판매량 입력
 }
 
-void eachInfo(struct stuffInfo *stuff){ //개별 정보
-    printf("\n상품명 : %s",stuff->stuffName);
-    printf("\n재고 : %d", stuff->stuffStoreNum - stuff->stuffSoldNum);
-    printf("\n판매 가격 : %d\n" , stuff->stuffSellPrice);
+// 개별 상품 정보 출력 함수
+void eachInfo(struct stuffInfo *stuff) {
+    printf("\n상품명 : %s", stuff->stuffName); // 상품명 출력
+    printf("\n재고 : %d", stuff->stuffStoreNum - stuff->stuffSoldNum); // 재고 계산 및 출력
+    printf("\n판매 가격 : %d\n", stuff->stuffSellPrice); // 판매 가격 출력
 }
 
-void allInfo(struct stuffInfo* stuff){ //전체현황
-    int max = 0, min = 1001010;
-    float ipSum = 0;
-    float pmSum = 0;
-    int maxId, minId;
-    
-    for(int i=0; i<num; i++){
-        ipSum += stuff[i].stuffStoreNum; //총 입고 개수 저장
-        pmSum += stuff[i].stuffSoldNum; // 총 판매 개수 저장
-        if(stuff[i].stuffSoldNum>max){ //최소 최대 판매 구하기
-            maxId = stuff[i].stuffSerialNum;
-            max = stuff[i].stuffSoldNum;
+// 전체 상품 정보 출력 함수
+void allInfo(struct stuffInfo* stuff) {
+    int max = 0, min = 1001010; // 최대/최소 판매량 초기화
+    float ipSum = 0;            // 총 입고량
+    float pmSum = 0;            // 총 판매량
+    int maxId, minId;           // 최대/최소 판매 상품 ID
+
+    // 총 입고량, 판매량, 최대/최소 판매량 계산
+    for (int i = 0; i < num; i++) {
+        ipSum += stuff[i].stuffStoreNum; // 총 입고량
+        pmSum += stuff[i].stuffSoldNum;  // 총 판매량
+        if (stuff[i].stuffSoldNum > max) {
+            maxId = stuff[i].stuffSerialNum; // 최대 판매량 상품 ID
+            max = stuff[i].stuffSoldNum;     // 최대 판매량
         }
-        if(stuff[i].stuffSoldNum<min){
-            minId = stuff[i].stuffSerialNum;
-            min = stuff[i].stuffSoldNum;
+        if (stuff[i].stuffSoldNum < min) {
+            minId = stuff[i].stuffSerialNum; // 최소 판매량 상품 ID
+            min = stuff[i].stuffSoldNum;     // 최소 판매량
         }
     }
+
+    // 각 상품의 재고 수량 출력
     printf("\n재고 수량 : ");
-    for(int i=0; i<num; i++ ){
+    for (int i = 0; i < num; i++) {
         printf("%d ", stuff[i].stuffStoreNum - stuff[i].stuffSoldNum);
     }
-    
-    float pmSumPer = pmSum/ipSum * 100.0; 
-    
-    printf("\n총 판매량 : %.0f (판매율 %.2f%%)\n",pmSum ,pmSumPer);
-    for(int i=0; i<num; i++){
-        if(max == stuff[i].stuffSoldNum){
-            printf("가장 많이 판매된 상품 : ID %d, 상품명 : %s 판매량 %d\n",i+1 ,stuff[i].stuffName ,max );
+
+    // 총 판매량 및 판매율 계산 및 출력
+    float pmSumPer = pmSum / ipSum * 100.0;
+    printf("\n총 판매량 : %.0f (판매율 %.2f%%)\n", pmSum, pmSumPer);
+
+    // 가장 많이 판매된 상품 출력
+    for (int i = 0; i < num; i++) {
+        if (max == stuff[i].stuffSoldNum) {
+            printf("가장 많이 판매된 상품 : ID %d, 상품명 : %s 판매량 %d\n", stuff[i].stuffSerialNum, stuff[i].stuffName, max);
         }
     }
-    for(int i=0; i<num; i++){
-        if(min == stuff[i].stuffSoldNum){
-            printf("가장 적게 판매된 상품 : ID %d, 상품명 : %s 판매량 %d\n",i+1 ,stuff[i].stuffName ,min );
+
+    // 가장 적게 판매된 상품 출력
+    for (int i = 0; i < num; i++) {
+        if (min == stuff[i].stuffSoldNum) {
+            printf("가장 적게 판매된 상품 : ID %d, 상품명 : %s 판매량 %d\n", stuff[i].stuffSerialNum, stuff[i].stuffName, min);
         }
     }
-    for(int i=0; i<num; i++){
-        if((stuff[i].stuffStoreNum - stuff[i].stuffSoldNum) <=2){
-            printf("상품 ID %d : 재고부족(%d)\n", stuff[i].stuffSerialNum , stuff[i].stuffStoreNum - stuff[i].stuffSoldNum);
+
+    // 재고 부족 상품 출력
+    for (int i = 0; i < num; i++) {
+        if ((stuff[i].stuffStoreNum - stuff[i].stuffSoldNum) <= 2) {
+            printf("상품 ID %d : 재고부족(%d)\n", stuff[i].stuffSerialNum, stuff[i].stuffStoreNum - stuff[i].stuffSoldNum);
         }
     }
 }
