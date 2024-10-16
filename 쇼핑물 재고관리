@@ -4,21 +4,26 @@
 int main()
 {
     int num,id;
-    int ip[101]={};
-    int pm[101]={};
+    int ip[101]={};   //상품 입고량을 저장하는 배열, 101개의 상품
+    int pm[101]={};   //상품 판매량을 저장하는 배열, 101개의 상품
     
-    scanf("%d", &num);
-    
-    for(int i=0; i<num; i++ ){
-        scanf("%d", &ip[i]);
+    scanf("%d", &num);   //총 상품의 개수를 입력 받는다
+
+//상품별 입고량을 입력 받음
+    for(int i=0; i<num; i++ ){   
+        scanf("%d", &ip[i]);     //상품의 입고량을 배열에 저장
     }
+//상품별 판매량을 입력 받음
     for(int i=0; i<num; i++ ){
-        scanf("%d", &pm[i]);
+        scanf("%d", &pm[i]);       //상품의 판매량을 배열에 저장
     }
+//특정 상품의 ID를 입력 받음
     scanf("%d", &id);
-    printf("%d\n", ip[id-1]-pm[id-1]);
+//해당 상품의 잔여 재고량을 출력 (입고량, 판매량)
+    printf("%d\n", ip[id-1]-pm[id-1]);    //배열 0부터 접근 (id -1)
+//모든 상품에 대해 잔여 재고량 (입고량, 판매량) 출력
     for(int i=0; i<num; i++ ){
-        printf("%d ", ip[i]-pm[i]);
+        printf("%d ", ip[i]-pm[i]);       //입고량-판매량 계산 후 출력
     }
 
     return 0;
