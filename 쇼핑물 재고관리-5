@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_PRODUCTS 5  // 최대 상품 수
+#define MAX_NAME_LEN 20 // 상품명 최대 길이
+
+// 상품 구조체 정의
+struct Product {
+    char name[MAX_NAME_LEN];
+    int stock;
+    int sold;
+};
+
+// 함수 선언
+void inputProductName(struct Product products[], int index);
+void displayProductStatus(struct Product products[], int numProducts);
+
+int main() {
+    struct Product products[MAX_PRODUCTS]; // 상품 배열
+    int menu;
+    int productCount = 0; // 입력된 상품 수
+
+    // 상품 데이터 초기화
+    for (int i = 0; i < MAX_PRODUCTS; i++) {
+        strcpy(products[i].name, "");
+        products[i].stock = 0;
+        products[i].sold = 0;
+    }
+
+    while (1) {
+        // 메뉴 출력
+        printf("원하는 메뉴를 선택하세요.(1. 입고, 2. 판매, 3. 상품현황, 4. 상품명 입력, 5. 종료)\n");
+        scanf("%d", &menu);
+
+        switch (menu) {
+            case 1: // 입고
+                // 구현
+                break;
+            case 2: // 판매
+                // 구현
+                break;
+            case 3: // 상품현황
+                displayProductStatus(products, productCount);
+                break;
+            case 4: // 상품명 입력
+                if (productCount < MAX_PRODUCTS) {
+                    inputProductName(products, productCount);
+                    productCount++;
+                } else {
+                    printf("더 이상 상품을 입력할 수 없습니다.\n");
+                }
+                break;
+            case 5: // 종료
+                printf("프로그램을 종료합니다.\n");
+                return 0;
+            default:
+                printf("잘못된 입력입니다. 다시 시도하세요.\n");
+        }
+    }
+
+    return 0;
+}
+
+// 상품명 입력 함수
+void inputProductName(struct Product products[], int index) {
+    printf("상품명을 입력하세요: ");
+    scanf("%s", products[index].name);
+    printf("재고를 입력하세요: ");
+    scanf("%d", &products[index].stock);
+    products[index].sold = 0; // 초기 판매량은 0
+    printf("상품이 등록되었습니다: %s, 재고: %d\n", products[index].name, products[index].stock);
+}
+
+// 상품 현황 출력 함수
+void displayProductStatus(struct Product products[], int numProducts) {
+    printf("상품현황을 출력합니다.\n");
+    for (int i = 0; i < numProducts; i++) {
+        printf("상품명: %s, 재고량: %d, 판매량: %d\n", products[i].name, products[i].stock, products[i].sold);
+    }
+}
