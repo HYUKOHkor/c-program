@@ -3,52 +3,54 @@
 
 int main()
 {
-    int num,id;
-    int ip[101]={};
-    int pm[101]={};
-    float ipSum = 0;
-    float pmSum = 0;
-    int max = 0, min = 1001010;
-    int maxId, minId;
-    
+    int num,id;         //num-개수, id-특정 id 저장 변수 선언
+    int ip[101]={};     //입고 101개
+    int pm[101]={};     //판매 -101개
+    float ipSum = 0;     //전체 입고량 합을 저장할 변수
+    float pmSum = 0;     //전체 판매량 합을 저장할 변수
+    int max = 0, min = 1001010;     //최대 판매량, 최소 판매량 저장할 변수
+    int maxId, minId;               //최대 판매량, 최소 판매량을 기록한 상품의 ID를 저장할 변수
+
+// 상품의 총 개수 입력 받음
     scanf("%d", &num);
-    
-    for(int i=0; i<num; i++ ){      //입고 받기
-        scanf("%d", &ip[i]);
-        ipSum += ip[i];             //총 입고 개수 저장
+
+// 각 상품의 입고량을 입력 받고, 총 입고량을 계산     
+    for(int i=0; i<num; i++ ){      
+        scanf("%d", &ip[i]);        //입고량을 받아 ip 배열에 저장
+        ipSum += ip[i];             //입력 받은 입고량을 ipSum에 더해서 총 입고량 계산
     }
-    
-    for(int i=0; i<num; i++ ){       // 판매 받기
-        scanf("%d", &pm[i]);
-        pmSum += pm[i];              // 총 판매 개수 저장
+
+//각 상품의 판매량을 입력 받고 총 판매량을 계산하여 최대 및 최소 판매량 계산
+    for(int i=0; i<num; i++ ){       
+        scanf("%d", &pm[i]);        //판매량을 입력 받아 pm 배열에 저장
+        pmSum += pm[i];              // 입력받은 판매량을 pmSum에 더해 총 판매량 계산
+
+//최대 판매량을 찾기 위한 조건식
         if(pm[i]>max){             //최소 최대 판매 구하기
             maxId = i+1;
-            max = pm[i];
+            max = pm[i];           //최대 판매량 값 저장
         }
-        if(pm[i]<min){
-            minId = i+1;
-            min = pm[i];
+        if(pm[i]<min){           //최소 판매량을 찾기 위한 조건
+            minId = i+1;          //최소 판매량 기록한 상품의 id 저장
+            min = pm[i];        //최소 판매량 값 저장
         }
     }
-    
-             /*scanf("%d", &id);            //1주차 id 입력
-    
-             printf("%d\n", ip[id-1]-pm[id-1]);
-           */
-    
+
+// 각 상품의 재고 수량 계산 출력
     printf("재고 수량 : ");
     for(int i=0; i<num; i++ ){
-        printf("%d ", ip[i]-pm[i]);
+        printf("%d ", ip[i]-pm[i]);     //입고, 판매 계산 출력
     }
-    
+
+//판매율을 계산
     float pmSumPer = pmSum/ipSum * 100.0; 
-    
     printf("\n총 판매량 : %.0f (판매율 %.2f%%)\n",pmSum ,pmSumPer);
     printf("가장 많이 판매된 상품 : ID %d, 판매량 %d\n",maxId ,max );
     printf("가장 적게 판매된 상품 : ID %d, 판매량 %d\n",minId ,min );
-    
+
+//재고 부족한 상품 찾아 출력(재고가 2 이하 상품)
     for(int i=0; i<num; i++){
-        if(ip[i]-pm[i]<=2){
+        if(ip[i]-pm[i]<=2){    
             printf("상품 ID %d : 재고부족(%d)\n", i+1, ip[i]-pm[i]);
         }
     }
