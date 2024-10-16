@@ -1,151 +1,156 @@
 #include <stdio.h>
-#define num 5
+#define num 5 // 최대 상품 개수 정의
 
-void ipgo();
-void panmae();
-void stuffInfo();
+// 함수 프로토타입 선언
+void ipgo(int* ip, int* pm); // 입고 처리 함수
+void panmae(int* ip, int* pm); // 판매 처리 함수
+void stuffInfo(int* ip, int* pm); // 상품 현황 확인 함수
 
-    //int id=0;
+int main() {
+    int ip[num] = {0}; // 입고 수량 배열 초기화
+    int pm[num] = {0}; // 판매 수량 배열 초기화
     
-    
-
-int main()
-{
-    int ip[num]={0};
-    int pm[num]={0};
-    
-    int select = 5;
+    int select = 5; // 메뉴 선택 변수 초기화
     printf("[쇼핑몰 관리 프로그램]\n");
     printf("> 원하는 메뉴를 선택하세요.(1. 입고, 2. 판매, 3. 상품현황, 4. 종료)\n");
-    printf(">");
-    while(select<0||select>4){
+    printf("> ");
+    
+    // 사용자로부터 메뉴 선택을 받고 잘못된 선택 시 재입력
+    while (select < 0 || select > 4) {
         scanf("%d", &select);
-        if(select<0||select>4){
+        if (select < 0 || select > 4) {
             printf("\n잘못된 값입니다.\n");
         }
     }
     
-    
-    while(select != 4){
-    
-    if(select == 1){
-        ipgo(ip,pm);
+    // 종료 선택이 아닐 경우 반복
+    while (select != 4) {
+        if (select == 1) { // 입고 선택 시
+            ipgo(ip, pm); // 입고 함수 호출
+        } else if (select == 2) { // 판매 선택 시
+            panmae(ip, pm); // 판매 함수 호출
+        } else if (select == 3) { // 상품 현황 선택 시
+            stuffInfo(ip, pm); // 상품 현황 함수 호출
+        }
+        
+        // 메뉴 선택을 다시 묻기
+        printf("> 원하는 메뉴를 선택하세요.(1. 입고, 2. 판매, 3. 상품현황, 4. 종료)\n");
+        printf("> ");
+        scanf("%d", &select); // 사용자로부터 메뉴 선택 입력받기
+        
+        // 잘못된 입력 확인
+        if (select < 0 || select > 4) {
+            printf("\n잘못된 값입니다.\n");
+        }
     }
-    else if(select == 2){
-        panmae(ip,pm);
-    }
-    else if(select == 3){
-        stuffInfo(ip,pm);
-    }
-    
-    //printf("\n[쇼핑몰 관리 프로그램]\n");
-    printf("> 원하는 메뉴를 선택하세요.(1. 입고, 2. 판매, 3. 상품현황, 4. 종료)\n");
-    printf("> ");
-    scanf("%d", &select);
-    
-    if(select<0||select>4){
-        printf("\n잘못된 값입니다.\n");
-    }
-    
-    }
-    return 0;
+    return 0; // 프로그램 종료
 }
 
-void ipgo(int* ip ,int *pm){                   //입고
-    int select_Ipgo = 0;
-    int aa,bb;
-    int getIp;
+// 입고 함수 정의
+void ipgo(int* ip, int* pm) { // 입고
+    int select_Ipgo = 0; // 입고 선택 변수
+    int aa, bb; // 변수 초기화
+    int getIp; // 입고 수량 입력 받을 변수
     printf("\n> 입고수량 입력 : 전체 상품 입고수량 입력 1, 개별 상품 입력 2를 선택\n");
-    scanf("%d", &select_Ipgo);
-    if(select_Ipgo == 1){                    //1번 선택시
+    scanf("%d", &select_Ipgo); // 전체 또는 개별 입고 선택
+    
+    if (select_Ipgo == 1) { // 전체 입고 선택 시
         printf("\n> 전체 상품 %d 개의 입고수량을 입력해주세요\n", num);
-        for(int i=0; i<num; i++ ){           //입고 받기
+        for (int i = 0; i < num; i++) { // 각 상품의 입고 수량 입력 받기
             scanf("%d", &getIp);
-            *(ip+i) = getIp;
+            *(ip + i) = getIp; // 배열에 입고 수량 저장
         }
-    }
-    else if(select_Ipgo == 2){          //2번 선택시
+    } else if (select_Ipgo == 2) { // 개별 입고 선택 시
         printf("\n상품ID :");
-        scanf("%d", &aa);
+        scanf("%d", &aa); // 상품 ID 입력 받기
         printf("\n입고수량 :");
-        scanf("%d", &bb);
-        *(ip+aa-1) = bb;
+        scanf("%d", &bb); // 입고 수량 입력 받기
+        *(ip + aa - 1) = bb; // 해당 상품의 입고 수량 저장
     }
 }
 
-void panmae(int* ip ,int *pm){             //판매
-    int select_Panmae = 0;
-    int aa=0,bb=0;
-    int getPm;
+// 판매 함수 정의
+void panmae(int* ip, int* pm) { // 판매
+    int select_Panmae = 0; // 판매 선택 변수
+    int aa = 0, bb = 0; // 변수 초기화
+    int getPm; // 판매 수량 입력 받을 변수
     printf("\n> 판매수량 입력 : 전체 상품 판매수량 입력 1, 개별 상품 입력 2를 선택\n");
-    scanf("%d", &select_Panmae);
-    if(select_Panmae == 1){
+    scanf("%d", &select_Panmae); // 전체 또는 개별 판매 선택
+    
+    if (select_Panmae == 1) { // 전체 판매 선택 시
         printf("\n> 전체 상품 %d 개의 판매수량을 입력해주세요\n", num);
-        for(int i=0; i<num; i++ ){ // 판매 받기
+        for (int i = 0; i < num; i++) { // 각 상품의 판매 수량 입력 받기
             scanf("%d", &getPm);
-            *(pm+i) = getPm;
-        /*    if((ip[i]-pm[i])<0){
-                printf("\n해당 상품이 부족해 판매 할 수 없습니다.");
-                
-            }
-            else{
-                pm[aa-1]=bb;
-            }*/
+            *(pm + i) = getPm; // 배열에 판매 수량 저장
         }
-    }
-    else if(select_Panmae == 2){
+    } else if (select_Panmae == 2) { // 개별 판매 선택 시
         printf("\n상품ID :");
-        scanf("%d", &aa);
+        scanf("%d", &aa); // 상품 ID 입력 받기
         printf("\n판매수량 :");
-        scanf("%d", &bb);
-        if((*(ip+aa-1)-(*(pm+aa-1)+bb))<0){
-            printf("\n해당 상품이 부족해 판매 할 수 없습니다.");
-        }
-        else{
-            *(pm+aa-1)=bb;
+        scanf("%d", &bb); // 판매 수량 입력 받기
+        
+        // 재고 확인 후 판매 처리
+        if ((*(ip + aa - 1) - (*(pm + aa - 1) + bb)) < 0) {
+            printf("\n해당 상품이 부족해 판매 할 수 없습니다."); // 재고 부족 경고
+        } else {
+            *(pm + aa - 1) = bb; // 판매 수량 저장
         }
     }
 }
 
-void stuffInfo(int* ip ,int *pm){              //상품현황
-    int max = 0, min = 1001010;
-    float ipSum = 0;
-    float pmSum = 0;
-    int maxId, minId;
+// 상품 현황 함수 정의
+void stuffInfo(int* ip, int* pm) { // 상품현황
+    int max = 0, min = 1001010; // 최대, 최소 초기화
+    float ipSum = 0; // 총 입고 수량
+    float pmSum = 0; // 총 판매 수량
+    int maxId, minId; // 최대, 최소 ID 초기화
     
-    for(int i=0; i<num; i++){
-        ipSum += ip[i];                 //총 입고 개수 저장
-        pmSum += pm[i];             // 총 판매 개수 저장
-        if(*(ip+i)>max){           //최소 최대 판매 구하기
-            maxId = i+1;
-            max = *(ip+i);
+    for (int i = 0; i < num; i++) { // 각 상품에 대한 입고 및 판매 수량 집계
+        ipSum += ip[i]; // 총 입고 개수 저장
+        pmSum += pm[i]; // 총 판매 개수 저장
+        
+        // 최대 판매량 상품 찾기
+        if (*(ip + i) > max) {
+            maxId = i + 1; // 상품 ID 저장
+            max = *(ip + i); // 최대 입고 수량 저장
         }
-        if(*(pm+i)<min){
-            minId = i+1;
-            min = *(pm+i);
+        
+        // 최소 판매량 상품 찾기
+        if (*(pm + i) < min) {
+            minId = i + 1; // 상품 ID 저장
+            min = *(pm + i); // 최소 판매 수량 저장
         }
     }
+    
+    // 재고 수량 출력
     printf("\n재고 수량 : ");
-    for(int i=0; i<num; i++ ){
-        printf("%d ", *(ip+i)-*(pm+i));
+    for (int i = 0; i < num; i++) {
+        printf("%d ", *(ip + i) - *(pm + i)); // 재고 수량 계산 후 출력
     }
     
-    float pmSumPer = pmSum/ipSum * 100.0; 
+    float pmSumPer = pmSum / ipSum * 100.0; // 판매율 계산
     
-    printf("\n총 판매량 : %.0f (판매율 %.2f%%)\n",pmSum ,pmSumPer);
-    for(int i=0; i<num; i++){
-        if(max == *(ip+i)){
-            printf("가장 많이 판매된 상품 : ID %d, 판매량 %d\n",i+1 ,max );
+    // 총 판매량 및 판매율 출력
+    printf("\n총 판매량 : %.0f (판매율 %.2f%%)\n", pmSum, pmSumPer);
+    
+    // 가장 많이 판매된 상품 출력
+    for (int i = 0; i < num; i++) {
+        if (max == *(ip + i)) {
+            printf("가장 많이 판매된 상품 : ID %d, 판매량 %d\n", i + 1, max);
         }
     }
-    for(int i=0; i<num; i++){
-        if(min == *(pm+i)){
-            printf("가장 적게 판매된 상품 : ID %d, 판매량 %d\n",i+1 ,min );
+    
+    // 가장 적게 판매된 상품 출력
+    for (int i = 0; i < num; i++) {
+        if (min == *(pm + i)) {
+            printf("가장 적게 판매된 상품 : ID %d, 판매량 %d\n", i + 1, min);
         }
     }
-    for(int i=0; i<num; i++){
-        if(*(ip+i)-*(pm+i)<=2){
-            printf("상품 ID %d : 재고부족(%d)\n", i+1, *(ip+i)-*(pm+i));
+    
+    // 재고 부족 상품 경고 출력
+    for (int i = 0; i < num; i++) {
+        if (*(ip + i) - *(pm + i) <= 2) {
+            printf("상품 ID %d : 재고부족(%d)\n", i + 1, *(ip + i) - *(pm + i)); // 재고 부족 상품 출력
         }
     }
 }
