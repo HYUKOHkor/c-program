@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_PRODUCTS 5
+#define FILENAME "products.txt"
+
+// 상품 구조체 정의
+typedef struct {
+    int id;
+    char name[50];
+    int price, stock, sold, totalRevenue;
+} Product;
+
+// 함수 선언
+void addStock(Product *p);
+void sellProduct(Product *p);
+void displayProduct(const Product *p);
+void displayAllProducts(Product products[], int size);
+void saveProducts(Product products[], int size);
+int loadProducts(Product products[]);
+
+int main() {
+    Product products[MAX_PRODUCTS] = {0};
+    int productCount = loadProducts(products), choice, id, qty;
+
+    while (1) {
+        printf("\n1. 입고 2. 판매 3. 개별 조회 4. 전체 조회 5. 저장 6. 종료\n선택: ");
+        scanf("%d", &choice);
+        if (choice == 6) break;
+
+        switch (choice) {
+            case 1: // 입고
+                if (productCount < MAX_PRODUCTS) {
+                    Product *p = &products[productCount++];
+                    printf("ID 이름 가격 입고량 입력: ");
+                    scanf("%d %s %d %d", &p->id, p->name, &p->price, &p->stock);
+                    p->sold = p->totalRevenue = 0;
+                } else printf("상품 최대 등록 완료.\n");
+                break;
+
+            case 2: // 판매
+                printf("판매 ID, 수량 입력: ");
+                scanf("%d %d", &id, &qty);
+                for (int i = 0; i < productCount; i++)
+                    if (products[i].id == id) {
+                        if (qty <= products[i].stock) {
+                            products[i].stock -= qty;
+                            products[i].sold += qty;
+                            products[i].totalRevenue += qty * products[i].price;
+                            printf("판매 완료.\n");
+                        } else printf("재고 부족.\n");
+                        break;
+                    }
+                break;
+
+            case 3: // 개별 조회
+                printf("조회 ID 입력: ");
+                scanf("%d", &id);
+                for (int i = 0; i < productCount; i++)
+                    if (products[i].id == id) displayProduct(&products[i]);
+                break;
+
+            case 4: // 전체 조회
+                displayAllProducts(products, productCount);
+                break;
+
+            case 5: // 저장
+                saveProducts(products, productCount);
+                printf("저장 완료.\n");
+                break;
+
+            default:
+                printf("잘못된 입력.\n");
+        }
+    }
+    return 0;
+}
+
+// 개별 상품 출력
+void displayProduct(const Product *p) {
+    printf("ID:%d 이름:%s 가격:%d 재고:%d 판매:%d 매출:%d\n",
+           p->id, p->name, p->price, p->stock, p->sold, p->totalRevenue);
+}
+
+// 전체 상품 출력
+void displayAllProducts(Product products[], int size) {
+    for (int i = 0; i < size; i++) displayProduct(&products[i]);
+}
+
+// 상품 저장
+void saveProducts(Product products[], int size) {
+    FILE *file = fopen(FILENAME, "w");
+    if (file) {
+        fwrite(products, sizeof(Product), size, file);
+        fclose(file);
+    } else printf("저장 실패.\n");
+}
+
+// 상품 불러오기
+int loadProducts(Product products[]) {
+    FILE *file = fopen(FILENAME, "r");
+    if (file) {
+        int size = fread(products, sizeof(Product), MAX_PRODUCTS, file);
+        fclose(file);
+        return size;
+    }
+    return 0;
+}
